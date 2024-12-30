@@ -1,34 +1,16 @@
-<script lang="ts">
-import {defineComponent} from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
+<script setup lang="ts">
 import ReloadPWA from "./components/ReloadPWA.vue";
-
-export default defineComponent({
-  name: "App",
-  components: {
-    HelloWorld,
-    ReloadPWA,
-  },
-});
 </script>
 
 <template>
   <ReloadPWA/>
-  <h1>Hello App!</h1>
-  <p>
-    <strong>Current route path:</strong> {{ $route.fullPath }}
-  </p>
-  <nav>
-    <RouterLink to="/">Go to Home</RouterLink>
-    <RouterLink to="/list">Go to List</RouterLink>
-  </nav>
   <main>
     <RouterView/>
   </main>
 </template>
 
 
-<style scoped>
+<style scoped lang="scss">
 .logo {
   height: 6em;
   padding: 1.5em;
