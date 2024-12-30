@@ -14,8 +14,17 @@ export default defineComponent({
 
 <template>
   <ReloadPWA/>
-  <img alt="Vue logo" src="./assets/vue.svg"/>
-  <HelloWorld msg="Hello Vue 3 + Vite"/>
+  <h1>Hello App!</h1>
+  <p>
+    <strong>Current route path:</strong> {{ $route.fullPath }}
+  </p>
+  <nav>
+    <RouterLink to="/">Go to Home</RouterLink>
+    <RouterLink to="/list">Go to List</RouterLink>
+  </nav>
+  <main>
+    <RouterView/>
+  </main>
 </template>
 
 
