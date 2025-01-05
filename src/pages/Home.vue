@@ -1,18 +1,29 @@
 <script setup lang="ts">
 import {useRouter} from "vue-router";
 import {ref} from "vue";
+import {useFileReader} from "../composables/useFileReader";
+import {useOrdersStore} from "../stores/orders";
 
 const router = useRouter()
 const fileUpload = ref()
+const {readExcel} = useFileReader()
+const ordersStore = useOrdersStore()
 
 function triggerFileUpload() {
   fileUpload.value.click()
 }
 
-function handleFileUpload(event) {
-  const file = event.target.files[0];
-  if (file) {
-    console.log("file", file)
+async function handleFileUpload(event) {
+  try {
+    const file = event.target.files[0];
+    if (file) {
+      const data = await readExcel(file)
+      ordersStore.setItems(data)
+      await router.push("/list")
+    }
+  } catch (error) {
+    alert(error.message)
+    console.error(error)
   }
 }
 </script>
@@ -53,7 +64,7 @@ function handleFileUpload(event) {
 
   <!-- Hidden input for the files -->
   <input ref="fileUpload" type="file" class="hidden" @change="handleFileUpload"
-         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+         accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
 </template>
 
 <style scoped>
