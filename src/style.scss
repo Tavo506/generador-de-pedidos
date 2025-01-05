@@ -2,15 +2,3 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  height: 100dvh;
-}
-
-body {
-  height: 100%;
-}
-
-.btn-gradient {
-  background: linear-gradient(90deg, rgba(29,59,172,1) 0%, rgba(36,26,161,1) 100%);
-  color: white;
-}

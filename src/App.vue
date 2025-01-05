@@ -4,25 +4,16 @@ import ReloadPWA from "./components/ReloadPWA.vue";
 
 <template>
   <ReloadPWA/>
-  <main>
-    <RouterView/>
-  </main>
+  <v-responsive>
+    <v-app full-height>
+      <v-main>
+        <RouterView/>
+      </v-main>
+    </v-app>
+  </v-responsive>
 </template>
 
 
 <style scoped lang="scss">
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
 </style>

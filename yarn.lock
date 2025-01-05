@@ -2971,6 +2971,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"font-awesome@npm:4.7.0":
+  version: 4.7.0
+  resolution: "font-awesome@npm:4.7.0"
+  checksum: 10c0/1c456e2939c55192eed67db9c0efb8db3e92fd357ca189ca00030eb44acffa1e9f835288d2204c14b9a9c490a7b14b7090dfaff80ded6b2473f50a923dfb41e7
+  languageName: node
+  linkType: hard
+
 "for-each@npm:^0.3.3":
   version: 0.3.3
   resolution: "for-each@npm:0.3.3"
@@ -3079,6 +3086,7 @@ __metadata:
     "@vitejs/plugin-vue": "npm:^5.2.1"
     "@vue/tsconfig": "npm:^0.7.0"
     autoprefixer: "npm:^10.4.20"
+    font-awesome: "npm:4.7.0"
     postcss: "npm:^8.4.49"
     sass: "npm:^1.83.0"
     tailwindcss: "npm:^3.4.17"
@@ -3088,6 +3096,7 @@ __metadata:
     vue: "npm:^3.5.13"
     vue-router: "npm:4"
     vue-tsc: "npm:^2.2.0"
+    vuetify: "npm:^3.7.6"
     workbox-precaching: "npm:^7.3.0"
   languageName: unknown
   linkType: soft
@@ -5533,6 +5542,25 @@ __metadata:
     typescript:
       optional: true
   checksum: 10c0/4bbb5caf3f04fed933b01c100804f3693ff902984a3152ea1359a972264fa3240f6551d32f0163a79c64df3715b4d6691818c9f652cdd41b2473c69e2b0a373d
+  languageName: node
+  linkType: hard
+
+"vuetify@npm:^3.7.6":
+  version: 3.7.6
+  resolution: "vuetify@npm:3.7.6"
+  peerDependencies:
+    typescript: ">=4.7"
+    vite-plugin-vuetify: ">=1.0.0"
+    vue: ^3.3.0
+    webpack-plugin-vuetify: ">=2.0.0"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+    vite-plugin-vuetify:
+      optional: true
+    webpack-plugin-vuetify:
+      optional: true
+  checksum: 10c0/63a1320dbf686317280aba0cbd0f8d1e5563193c3d5cb2e3766c1b5b35664b9b3d09db271162d7271902d75e8275d7f8d8fbc8b0ec9fd859810c559a5947b628
   languageName: node
   linkType: hard
 
