@@ -1,5 +1,5 @@
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineComponent, computed} from "vue";
 import {useRegisterSW} from "virtual:pwa-register/vue";
 
 const {updateServiceWorker} = useRegisterSW();
@@ -12,7 +12,8 @@ export default defineComponent({
       offlineReady.value = false;
       needRefresh.value = false;
     };
-    return {offlineReady, needRefresh, updateServiceWorker, close};
+    const dialog = computed(() => needRefresh.value)
+    return {offlineReady, needRefresh, updateServiceWorker, close, dialog};
   },
   methods: {
     async close() {
@@ -27,18 +28,23 @@ export default defineComponent({
 </script>
 
 <template>
-  <div v-if="offlineReady || needRefresh" class="flex flex-wrap" role="alert">
-    <div class="message mt-1">
-      <span v-if="offlineReady"> App ready to work offline </span>
-      <span v-else>New content available, click on reload button to update.</span>
-    </div>
-    <div class="buttons flex align-middle mt-2 md:mt-0">
-      <button v-if="needRefresh" @click="updateServiceWorker()" class="button">
-        Reload
-      </button>
-      <button @click="close" class="button">
-        Close
-      </button>
-    </div>
-  </div>
+  <v-dialog
+      v-model="dialog"
+      width="auto"
+  >
+    <v-card
+        max-width="400"
+        prepend-icon="fa-refresh"
+        text="Actualiza el app para obtener las últimas características"
+        title="Actualización disponible"
+    >
+      <template v-slot:actions>
+        <v-spacer></v-spacer>
+
+        <v-btn @click="updateServiceWorker()">Actualizar</v-btn>
+
+        <v-btn @click="close">Cerrar</v-btn>
+      </template>
+    </v-card>
+  </v-dialog>
 </template>
