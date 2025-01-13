@@ -17,8 +17,10 @@ async function handleFileUpload(event) {
   try {
     const file = event.target.files[0];
     if (file) {
+      const name = file.name.split('.').slice(0, -1).join('.')
       const data = await readExcel(file)
       ordersStore.setItems(data)
+      ordersStore.setOrderName(name)
       await router.push("/list")
     }
   } catch (error) {
@@ -29,6 +31,8 @@ async function handleFileUpload(event) {
 </script>
 
 <template>
+  <v-app-bar :elevation="0">
+  </v-app-bar>
   <v-container min-height="100%">
     <h1 class="text-6xl text-center mb-16">Generador de Pedidos</h1>
     <v-row align="center" justify="center">

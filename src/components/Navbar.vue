@@ -8,11 +8,14 @@ function goBack() {
 </script>
 
 <template>
-  <v-toolbar>
+  <v-app-bar>
     <template v-slot:prepend>
       <v-btn @click="goBack" icon="fas fa-arrow-left"></v-btn>
     </template>
-  </v-toolbar>
+    <template v-slot:append>
+      <slot name="append"></slot>
+    </template>
+  </v-app-bar>
 </template>
 
 <style scoped>
