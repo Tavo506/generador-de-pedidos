@@ -24,7 +24,7 @@ function saveOrder() {
   }
 
   const header = `SUPER MARÍA AUXILIADORA\nGustavo Blanco Rojas\nTel: 2463-1546\nCorreo: tavobr1973@gmail.com\n\n`
-  const content = filterItems.map(item => `${item.name}: ${item.quantity}`).join('\n')
+  const content = filterItems.map(item => `${item.quantity} : ${item.name}`).join('\n')
   const fileContent = header + content
   const date = new Date().toLocaleDateString('en-GB').replaceAll('/', '-')
 
