@@ -9,6 +9,7 @@ import {useLocalStorage} from "@vueuse/core";
 // Local Storage to save the progress of the orders
 const storageOrderName = useLocalStorage('last-order-name', '')
 const storageOrderItems = useLocalStorage('last-order-items', [])
+const storageOrderPage = useLocalStorage('last-order-page', 1)
 const storageOrderInProgress = useLocalStorage('last-order', false)
 
 const router = useRouter()
@@ -36,11 +37,7 @@ if (ordersStore.orderLoaded) {
   }
 }
 
-watch(items.value, () => {
-  storageOrderItems.value = items.value
-})
-
-const page = ref(1)
+const page = ref(storageOrderPage ?? 1)
 const pages = Math.ceil(items.value.length / 20)
 
 const showErrorModal = ref(false)
@@ -74,11 +71,20 @@ function saveOrder() {
   URL.revokeObjectURL(url);
 }
 
+watch(items.value, () => {
+  storageOrderItems.value = items.value
+})
+
+watch(page, () => {
+  storageOrderPage.value = page.value
+})
+
 onBeforeRouteLeave((to, from, next) => {
   const answer = window.confirm('¿Seguro que quieres salir?')
   if (answer) {
     storageOrderName.value = null
     storageOrderItems.value = null
+    storageOrderPage.value = null
     storageOrderInProgress.value = false
     next()
   } else {
