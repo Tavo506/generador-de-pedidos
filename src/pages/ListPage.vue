@@ -5,6 +5,7 @@ import {ref, toRaw, watch} from "vue";
 import {Item} from "../types/types";
 import {onBeforeRouteLeave, onBeforeRouteUpdate, useRouter} from "vue-router";
 import {useLocalStorage} from "@vueuse/core";
+import {useFileWriter} from "../composables/useFileWriter";
 
 // Local Storage to save the progress of the orders
 const storageOrderName = useLocalStorage('last-order-name', '')
@@ -13,6 +14,7 @@ const storageOrderPage = useLocalStorage('last-order-page', 1)
 const storageOrderInProgress = useLocalStorage('last-order', false)
 
 const router = useRouter()
+const {exportOrderAsTxt} = useFileWriter()
 
 const ordersStore = useOrdersStore()
 const itemNames: string[] = toRaw(ordersStore.items)
@@ -43,32 +45,17 @@ const pages = Math.ceil(items.value.length / 20)
 const showErrorModal = ref(false)
 
 function saveOrder() {
-  const filterItems = items.value.filter((item: Item) => item.quantity > 0)
+  const filteredItems = items.value.filter((item: Item) => item.quantity > 0)
 
-  if (filterItems.length === 0) {
+  if (filteredItems.length === 0) {
     showErrorModal.value = true
     return
   }
 
-  const header = `SUPER MARÍA AUXILIADORA\nGustavo Blanco Rojas\nTel: 2463-1546\nCorreo: tavobr1971@gmail.com\n\n`
-  const content = filterItems.map(item => `${item.quantity} : ${item.name}`).join('\n')
-  const fileContent = header + content
   const date = new Date().toLocaleDateString('en-GB').replaceAll('/', '-')
+  const orderName = `${fileName.value}_${date}`
 
-  // Create the content as a Blob
-  const blob = new Blob([fileContent], {type: "text/plain"});
-  const url = URL.createObjectURL(blob);
-
-  // Create the download link
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${fileName.value}_${date}.txt`;
-  document.body.appendChild(a);
-  a.click();
-
-  // Clear
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  exportOrderAsTxt(filteredItems, orderName)
 }
 
 watch(items.value, () => {
