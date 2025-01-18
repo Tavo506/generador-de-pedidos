@@ -23,7 +23,7 @@ function saveOrder() {
     return
   }
 
-  const header = `SUPER MARÍA AUXILIADORA\nGustavo Blanco Rojas\nTel: 2463-1546\nCorreo: tavobr1973@gmail.com\n\n`
+  const header = `SUPER MARÍA AUXILIADORA\nGustavo Blanco Rojas\nTel: 2463-1546\nCorreo: tavobr1971@gmail.com\n\n`
   const content = filterItems.map(item => `${item.quantity} : ${item.name}`).join('\n')
   const fileContent = header + content
   const date = new Date().toLocaleDateString('en-GB').replaceAll('/', '-')
@@ -49,7 +49,7 @@ function saveOrder() {
 <template>
   <navbar>
     <template #append>
-      <v-btn size="x-large" variant="elevated" base-color="blue" append-icon="fa-download" @click="saveOrder">Save</v-btn>
+      <v-btn size="x-large" variant="elevated" base-color="blue" append-icon="fa-download" @click="saveOrder">Exportar</v-btn>
     </template>
   </navbar>
   <v-container>
