@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import {useRouter} from "vue-router";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {useFileReader} from "../composables/useFileReader";
 import {useOrdersStore} from "../stores/orders";
+import {useLocalStorage} from "@vueuse/core";
 
 const router = useRouter()
 const fileUpload = ref()
 const {readExcel} = useFileReader()
 const ordersStore = useOrdersStore()
+
+const showContinueModal = ref(false)
 
 function triggerFileUpload() {
   fileUpload.value.click()
@@ -28,6 +31,18 @@ async function handleFileUpload(event) {
     console.error(error)
   }
 }
+
+async function openLastOrder() {
+  await router.push("/list")
+}
+
+onMounted(() => {
+  const storageOrderInProgress = useLocalStorage('last-order', false)
+
+  if (storageOrderInProgress.value) {
+    showContinueModal.value = true
+  }
+})
 </script>
 
 <template>
@@ -64,6 +79,26 @@ async function handleFileUpload(event) {
         </v-btn>
       </v-col>
     </v-row>
+
+    <v-dialog
+        v-model="showContinueModal"
+        width="auto"
+    >
+      <v-card
+          max-width="400"
+          prepend-icon="fa-warning"
+          text="La aplicación se cerró mientras un pedido estaba en curso ¿Quieres continuar donde lo dejaste?"
+          title="¿Continuar pedido anterior?"
+      >
+        <template v-slot:actions>
+          <v-spacer></v-spacer>
+
+          <v-btn @click="openLastOrder()">Sí</v-btn>
+
+          <v-btn @click="showContinueModal = false">No</v-btn>
+        </template>
+      </v-card>
+    </v-dialog>
   </v-container>
 
   <!-- Hidden input for the files -->

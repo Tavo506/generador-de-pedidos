@@ -3,12 +3,42 @@ import Navbar from "../components/Navbar.vue";
 import {useOrdersStore} from "../stores/orders";
 import {ref, toRaw, watch} from "vue";
 import {Item} from "../types/types";
+import {onBeforeRouteLeave, onBeforeRouteUpdate, useRouter} from "vue-router";
+import {useLocalStorage} from "@vueuse/core";
+
+// Local Storage to save the progress of the orders
+const storageOrderName = useLocalStorage('last-order-name', '')
+const storageOrderItems = useLocalStorage('last-order-items', [])
+const storageOrderInProgress = useLocalStorage('last-order', false)
+
+const router = useRouter()
 
 const ordersStore = useOrdersStore()
 const itemNames: string[] = toRaw(ordersStore.items)
-const fileName: string = ordersStore.orderName
+const fileName = ref<string>(ordersStore.orderName)
 
 const items = ref<Item[]>(itemNames.map(item => ({name: item, quantity: 0})))
+
+if (ordersStore.orderLoaded) {
+  storageOrderName.value = fileName.value
+  storageOrderItems.value = items.value
+  storageOrderInProgress.value = true
+} else {
+  // If no file was loaded and the flag for order in progress is set on true, is that the app was closed
+  // while an order was in progress (I know, this is obvious)
+  if (storageOrderInProgress.value) {
+    fileName.value = storageOrderName.value
+    items.value = storageOrderItems.value
+    storageOrderInProgress.value = true
+
+  } else { // If the page was accessed without data, go back to the Homepage
+    router.push('/')
+  }
+}
+
+watch(items.value, () => {
+  storageOrderItems.value = items.value
+})
 
 const page = ref(1)
 const pages = Math.ceil(items.value.length / 20)
@@ -29,13 +59,13 @@ function saveOrder() {
   const date = new Date().toLocaleDateString('en-GB').replaceAll('/', '-')
 
   // Create the content as a Blob
-  const blob = new Blob([fileContent], { type: "text/plain" });
+  const blob = new Blob([fileContent], {type: "text/plain"});
   const url = URL.createObjectURL(blob);
 
   // Create the download link
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${fileName}_${date}.txt`;
+  a.download = `${fileName.value}_${date}.txt`;
   document.body.appendChild(a);
   a.click();
 
@@ -44,12 +74,24 @@ function saveOrder() {
   URL.revokeObjectURL(url);
 }
 
+onBeforeRouteLeave((to, from, next) => {
+  const answer = window.confirm('¿Seguro que quieres salir?')
+  if (answer) {
+    storageOrderName.value = null
+    storageOrderItems.value = null
+    storageOrderInProgress.value = false
+    next()
+  } else {
+    next(false)
+  }
+})
 </script>
 
 <template>
   <navbar>
     <template #append>
-      <v-btn size="x-large" variant="elevated" base-color="blue" append-icon="fa-download" @click="saveOrder">Exportar</v-btn>
+      <v-btn size="x-large" variant="elevated" base-color="blue" append-icon="fa-download" @click="saveOrder">Exportar
+      </v-btn>
     </template>
   </navbar>
   <v-container>
@@ -70,6 +112,7 @@ function saveOrder() {
                   v-model="item.raw.quantity"
                   :min="0"
                   :bg-color="item.raw.quantity ? 'green-lighten-3' : ''"
+                  aria-hidden="inert"
               ></v-number-input>
             </div>
           </div>

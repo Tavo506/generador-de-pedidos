@@ -1,11 +1,12 @@
-import {createWebHistory, createRouter} from 'vue-router'
+import {createWebHistory, createRouter, RouteRecordRaw} from 'vue-router'
 
 import Home from "./pages/Home.vue";
 import ListPage from "./pages/ListPage.vue";
 
-const routes = [
+const routes: RouteRecordRaw[] = [
     {path: '/', name: 'home', component: Home},
     {path: '/list', name: 'list', component: ListPage},
+    {path: '/:pathMatch(.*)*', redirect: '/'},
 ]
 
 export const router = createRouter({
