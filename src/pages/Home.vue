@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
+import PreferencesDialog from "../components/PreferencesDialog.vue";
 import {useFileReader} from "../composables/useFileReader";
 import {useOrdersStore} from "../stores/orders";
 import {useLocalStorage} from "@vueuse/core";
@@ -13,7 +14,8 @@ const fileUpload = ref()
 const {readExcel} = useFileReader()
 const ordersStore = useOrdersStore()
 
-const showContinueModal = ref(false)
+const showContinueDialog = ref(false)
+const showPreferencesDialog = ref(false)
 
 function triggerFileUpload() {
   fileUpload.value.click()
@@ -80,14 +82,14 @@ onMounted(() => {
 
         <v-spacer/>
 
-        <v-btn block class="">
+        <v-btn block @click="showPreferencesDialog = true">
           Preferencias
         </v-btn>
       </v-col>
     </v-row>
 
     <v-dialog
-        v-model="showContinueModal"
+        v-model="showContinueDialog"
         width="auto"
     >
       <v-card
@@ -101,10 +103,12 @@ onMounted(() => {
 
           <v-btn @click="openLastOrder()">Sí</v-btn>
 
-          <v-btn @click="showContinueModal = false">No</v-btn>
+          <v-btn @click="showContinueDialog = false">No</v-btn>
         </template>
       </v-card>
     </v-dialog>
+
+    <PreferencesDialog v-model="showPreferencesDialog"></PreferencesDialog>
   </v-container>
 
   <!-- Hidden input for the files -->

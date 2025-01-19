@@ -1,10 +1,23 @@
 import {Item} from "../types/types";
+import {MaybeRef, useLocalStorage} from "@vueuse/core";
 
 export function useFileWriter() {
+
+    const storageCommerce = useLocalStorage('preferences-commerce', '')
+    const storageName = useLocalStorage('preferences-name', '')
+    const storagePhone = useLocalStorage('preferences-phone', '')
+    const storageEmail = useLocalStorage('preferences-email', '')
+
     function exportOrderAsTxt(items: Item[], fileName: string) {
-        const header = `SUPER MARÍA AUXILIADORA\nGustavo Blanco Rojas\nTel: 2463-1546\nCorreo: tavobr1971@gmail.com\n\n` // TODO Load from preferences
+        const commerce = storageCommerce.value ? `${storageCommerce.value}\n` : ''
+        const name = storageName.value ? `${storageName.value}\n` : ''
+        const phone = storagePhone.value ? `Tel: ${storagePhone.value}\n` : ''
+        const email = storageEmail.value ? `Email: ${storageEmail.value}\n` : ''
+
+        const header = commerce + name + phone + email
         const content = items.map(item => `${item.quantity} : ${item.name}`).join('\n')
-        const fileContent = header + content
+        const fileContent = header ? `${header}\n${content}` : content // If there is content for the header, append a last new line
+
         // Create the content as a Blob
         const blob = new Blob([fileContent], {type: "text/plain"});
         const url = URL.createObjectURL(blob);
