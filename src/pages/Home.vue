@@ -5,6 +5,9 @@ import {useFileReader} from "../composables/useFileReader";
 import {useOrdersStore} from "../stores/orders";
 import {useLocalStorage} from "@vueuse/core";
 
+const storageOrderName = useLocalStorage('last-order-name', '')
+const storageOrderInProgress = useLocalStorage('last-order', false)
+
 const router = useRouter()
 const fileUpload = ref()
 const {readExcel} = useFileReader()
@@ -33,14 +36,13 @@ async function handleFileUpload(event) {
 }
 
 async function openLastOrder() {
-  await router.push("/list")
+    storageOrderInProgress.value = true
+    await router.push("/list")
 }
 
 onMounted(() => {
-  const storageOrderInProgress = useLocalStorage('last-order', false)
-
   if (storageOrderInProgress.value) {
-    showContinueModal.value = true
+    showContinueDialog.value = true
   }
 })
 </script>
@@ -51,12 +53,16 @@ onMounted(() => {
   <v-container min-height="100%">
     <h1 class="text-6xl text-center mb-16">Generador de Pedidos</h1>
     <v-row align="center" justify="center">
-      <v-col cols="6" class="max-lg:hidden flex justify-center">
-        <img src="@/favicon.png" alt="Logo" class="h-48 w-48"/>
+      <v-col cols="12" md="6" class="flex justify-center">
+        <img src="@/favicon.png" alt="Logo" class="h-48 w-48 object-contain"/>
       </v-col>
       <v-col cols="12" md="6">
         <v-btn block class=" mb-8" size="x-large" @click="triggerFileUpload">
           Crear Pedido
+        </v-btn>
+
+        <v-btn block class=" mb-8" size="large" @click="openLastOrder" :disabled="!storageOrderName">
+          Cargar Último Pedido
         </v-btn>
 
         <v-row>

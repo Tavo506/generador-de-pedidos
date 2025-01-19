@@ -22,21 +22,17 @@ const fileName = ref<string>(ordersStore.orderName)
 
 const items = ref<Item[]>(itemNames.map(item => ({name: item, quantity: 0})))
 
-if (ordersStore.orderLoaded) {
+// If no file was loaded and the flag for order in progress is set on true, is that the app was closed
+// while an order was in progress or the last order was opened
+if (storageOrderInProgress.value) {
+  fileName.value = storageOrderName.value
+  items.value = storageOrderItems.value
+} else if (ordersStore.orderLoaded) {
   storageOrderName.value = fileName.value
   storageOrderItems.value = items.value
   storageOrderInProgress.value = true
-} else {
-  // If no file was loaded and the flag for order in progress is set on true, is that the app was closed
-  // while an order was in progress (I know, this is obvious)
-  if (storageOrderInProgress.value) {
-    fileName.value = storageOrderName.value
-    items.value = storageOrderItems.value
-    storageOrderInProgress.value = true
-
-  } else { // If the page was accessed without data, go back to the Homepage
-    router.push('/')
-  }
+} else { // If the page was accessed without data, go back to the Homepage
+  router.push('/')
 }
 
 const page = ref(storageOrderPage ?? 1)
@@ -69,9 +65,6 @@ watch(page, () => {
 onBeforeRouteLeave((to, from, next) => {
   const answer = window.confirm('¿Seguro que quieres salir?')
   if (answer) {
-    storageOrderName.value = null
-    storageOrderItems.value = null
-    storageOrderPage.value = null
     storageOrderInProgress.value = false
     next()
   } else {
@@ -105,7 +98,7 @@ onBeforeRouteLeave((to, from, next) => {
                   v-model="item.raw.quantity"
                   :min="0"
                   :bg-color="item.raw.quantity ? 'green-lighten-3' : ''"
-                  aria-hidden="inert"
+                  aria-hidden="false"
               ></v-number-input>
             </div>
           </div>
