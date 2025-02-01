@@ -29,6 +29,7 @@ async function handleFileUpload(event) {
       const data = await readExcel(file)
       ordersStore.setItems(data)
       ordersStore.setOrderName(name)
+      storageOrderInProgress.value = false
       await router.push("/list")
     }
   } catch (error) {
