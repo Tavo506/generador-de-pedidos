@@ -8,11 +8,13 @@ const storageCommerce = useLocalStorage('preferences-commerce', '')
 const storageName = useLocalStorage('preferences-name', '')
 const storagePhone = useLocalStorage('preferences-phone', '')
 const storageEmail = useLocalStorage('preferences-email', '')
+const storageCountWarning = useLocalStorage('preferences-count-warning', 99)
 
 const commerce = ref(storageCommerce.value)
 const name = ref(storageName.value)
 const phone = ref(storagePhone.value)
 const email = ref(storageEmail.value)
+const countWarning = ref(storageCountWarning.value)
 
 
 function save() {
@@ -20,6 +22,7 @@ function save() {
   storageName.value = name.value
   storagePhone.value = phone.value
   storageEmail.value = email.value
+  storageCountWarning.value = countWarning.value
 
   dialog.value = false
 }
@@ -78,6 +81,18 @@ function save() {
                   label="Email"
                   type="email"
                   v-model="email"
+              ></v-text-field>
+            </v-col>
+
+            <v-col
+                cols="12"
+                md="6"
+            >
+              <v-text-field
+                  label="Advertencia de cantidad"
+                  hint="Mostrar una advertencia si se digita una cantidad mayor a esta"
+                  type="number"
+                  v-model="countWarning"
               ></v-text-field>
             </v-col>
           </v-row>

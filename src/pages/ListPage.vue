@@ -12,6 +12,7 @@ const storageOrderName = useLocalStorage('last-order-name', '')
 const storageOrderItems = useLocalStorage('last-order-items', [])
 const storageOrderPage = useLocalStorage('last-order-page', 1)
 const storageOrderInProgress = useLocalStorage('last-order', false)
+const storageCountWarning = useLocalStorage('preferences-count-warning', 99)
 
 const router = useRouter()
 const {exportOrderAsTxt} = useFileWriter()
@@ -97,7 +98,7 @@ onBeforeRouteLeave((to, from, next) => {
                   variant="outlined"
                   v-model="item.raw.quantity"
                   :min="0"
-                  :bg-color="item.raw.quantity ? 'green-lighten-3' : ''"
+                  :bg-color="item.raw.quantity ? (item.raw.quantity > storageCountWarning ? 'yellow-lighten-2' : 'green-lighten-3') : ''"
                   aria-hidden="false"
               ></v-number-input>
             </div>
