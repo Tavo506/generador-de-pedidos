@@ -13,8 +13,30 @@ export function useFileReader() {
         return rows.map((row: string[]) => row[0])
     }
 
+    /**
+     * Read a Txt and return an array with the content of the order
+     * Used to load existing orders
+     * @param file
+     */
+    async function readText(file: File): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader()
+
+            reader.onload = function (event) {
+                resolve(event.target.result)
+            }
+
+            reader.onerror = function () {
+                reject("Error al leer el archivo")
+            }
+
+            reader.readAsText(file)
+        })
+    }
+
     return {
-        readExcel
+        readExcel,
+        readText,
     }
 }
 
