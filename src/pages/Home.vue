@@ -8,6 +8,7 @@ import {useLocalStorage} from "@vueuse/core";
 
 const storageOrderName = useLocalStorage('last-order-name', '')
 const storageOrderInProgress = useLocalStorage('last-order', false)
+const storageOrderPage = useLocalStorage('last-order-page', 1)
 
 const router = useRouter()
 const fileUpload = ref()
@@ -30,6 +31,7 @@ async function handleFileUpload(event) {
       ordersStore.setItems(data)
       ordersStore.setOrderName(name)
       storageOrderInProgress.value = false
+      storageOrderPage.value = 1
       await router.push("/list")
     }
   } catch (error) {

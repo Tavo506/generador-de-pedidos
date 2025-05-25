@@ -9,12 +9,16 @@ const storageName = useLocalStorage('preferences-name', '')
 const storagePhone = useLocalStorage('preferences-phone', '')
 const storageEmail = useLocalStorage('preferences-email', '')
 const storageCountWarning = useLocalStorage('preferences-count-warning', 99)
+const storageDisplayProgress = useLocalStorage('preferences-display-progress', true)
+const storageDisplayProgressOnPages = useLocalStorage('preferences-display-progress-on-pages', 5)
 
 const commerce = ref(storageCommerce.value)
 const name = ref(storageName.value)
 const phone = ref(storagePhone.value)
 const email = ref(storageEmail.value)
 const countWarning = ref(storageCountWarning.value)
+const displayProgress = ref(storageDisplayProgress.value)
+const displayProgressOnPages = ref(storageDisplayProgressOnPages.value)
 
 
 function save() {
@@ -23,6 +27,8 @@ function save() {
   storagePhone.value = phone.value
   storageEmail.value = email.value
   storageCountWarning.value = countWarning.value
+  storageDisplayProgress.value = displayProgress.value
+  storageDisplayProgressOnPages.value = displayProgressOnPages.value
 
   dialog.value = false
 }
@@ -92,8 +98,26 @@ function save() {
                   label="Advertencia de cantidad"
                   hint="Mostrar una advertencia si se digita una cantidad mayor a esta"
                   type="number"
+                  min="1"
                   v-model="countWarning"
               ></v-text-field>
+            </v-col>
+
+            <v-col
+                cols="12"
+                md="6"
+            >
+              <div class="flex justify-center">
+                <v-text-field
+                    label="Mostrar progreso"
+                    hint="Mostrar el progreso en listas de más de estas páginas"
+                    type="number"
+                    min="1"
+                    v-model="displayProgressOnPages"
+                    :disabled="!displayProgress"
+                ></v-text-field>
+                <v-checkbox-btn v-model="displayProgress" color="primary" class="h-[56px]"></v-checkbox-btn>
+              </div>
             </v-col>
           </v-row>
         </v-card-text>

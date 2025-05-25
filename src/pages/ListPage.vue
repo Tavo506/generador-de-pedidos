@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Navbar from "../components/Navbar.vue";
 import {useOrdersStore} from "../stores/orders";
-import {ref, toRaw, watch} from "vue";
+import {computed, ref, toRaw, watch} from "vue";
 import {Item} from "../types/types";
 import {onBeforeRouteLeave, onBeforeRouteUpdate, useRouter} from "vue-router";
 import {useLocalStorage} from "@vueuse/core";
@@ -13,6 +13,8 @@ const storageOrderItems = useLocalStorage('last-order-items', [])
 const storageOrderPage = useLocalStorage('last-order-page', 1)
 const storageOrderInProgress = useLocalStorage('last-order', false)
 const storageCountWarning = useLocalStorage('preferences-count-warning', 99)
+const storageDisplayProgress = useLocalStorage('preferences-display-progress', true)
+const storageDisplayProgressOnPages = useLocalStorage('preferences-display-progress-on-pages', 5)
 
 const router = useRouter()
 const {exportOrderAsTxt} = useFileWriter()
@@ -37,7 +39,9 @@ if (storageOrderInProgress.value) {
 }
 
 const page = ref(storageOrderPage ?? 1)
-const pages = Math.ceil(items.value.length / 20)
+const pages = ref(Math.ceil(items.value.length / 20))
+const progress = computed(() => page.value / pages.value * 100)
+const displayProgress = computed(() => storageDisplayProgress.value && pages.value >= storageDisplayProgressOnPages.value)
 
 const showErrorModal = ref(false)
 
@@ -81,6 +85,13 @@ onBeforeRouteLeave((to, from, next) => {
       </v-btn>
     </template>
   </navbar>
+  <div v-if="displayProgress" class="position-fixed left-0 right-0 top-0 pt-[var(--v-layout-top)]">
+    <v-progress-linear v-model="progress" color="green-lighten-1" height="20">
+      <template v-slot:default="{ value }">
+        <strong class="text-sm">{{ Math.ceil(value) }}%</strong>
+      </template>
+    </v-progress-linear>
+  </div>
   <v-container>
     <v-data-iterator :items="items" items-per-page="20" :page="page">
       <template v-slot:default="{ items }">
