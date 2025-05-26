@@ -92,7 +92,7 @@ onBeforeRouteLeave((to, from, next) => {
       </template>
     </v-progress-linear>
   </div>
-  <v-container>
+  <v-container :class="{'!pt-[28px]': displayProgress}">
     <v-data-iterator :items="items" items-per-page="20" :page="page">
       <template v-slot:default="{ items }">
         <template v-for="(item, i) in items" :key="i">
