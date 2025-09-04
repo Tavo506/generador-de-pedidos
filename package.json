@@ -30,5 +30,5 @@
     "vue-tsc": "^2.2.10",
     "workbox-precaching": "^7.3.0"
   },
-  "packageManager": "yarn@4.6.0"
+  "packageManager": "yarn@4.9.4"
 }
