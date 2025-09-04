@@ -1,5 +1,5 @@
 import {Item} from "../types/types";
-import {MaybeRef, useLocalStorage} from "@vueuse/core";
+import {useLocalStorage} from "@vueuse/core";
 
 export function useFileWriter() {
 
@@ -7,14 +7,16 @@ export function useFileWriter() {
     const storageName = useLocalStorage('preferences-name', '')
     const storagePhone = useLocalStorage('preferences-phone', '')
     const storageEmail = useLocalStorage('preferences-email', '')
+    const storageActivityCode = useLocalStorage('preferences-activity-code', '')
 
     function exportOrderAsTxt(items: Item[], fileName: string) {
         const commerce = storageCommerce.value ? `${storageCommerce.value}\n` : ''
         const name = storageName.value ? `${storageName.value}\n` : ''
         const phone = storagePhone.value ? `Tel: ${storagePhone.value}\n` : ''
         const email = storageEmail.value ? `Email: ${storageEmail.value}\n` : ''
+        const activityCode = storageActivityCode.value ? `Código de Actividad Económica: ${storageActivityCode.value}\n` : ''
 
-        const header = commerce + name + phone + email
+        const header = commerce + name + phone + email + activityCode
         const content = items.map(item => `${item.quantity} : ${item.name}`).join('\n')
         const fileContent = header ? `${header}\n${content}` : content // If there is content for the header, append a last new line
 
